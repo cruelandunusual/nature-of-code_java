@@ -8,5 +8,5 @@ void setup() {
 
 void draw() {
   w.step();
-  w.display();
+  w.display(); //added a comment
 }
