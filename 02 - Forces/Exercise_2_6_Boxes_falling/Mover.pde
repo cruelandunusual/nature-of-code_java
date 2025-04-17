@@ -1,0 +1,135 @@
+
+
+class Mover
+{
+
+  PVector location;
+  PVector velocity;
+  PVector acceleration;
+  // The object now has mass!
+  float mass;
+  float rectWidth;
+  float rectHalf;
+  
+
+  Mover(float m, float x, float y)
+  {
+    // And for now, we’ll just set the mass equal to 1 for simplicity.
+    mass = m;
+    location = new PVector(x,y);
+    velocity = new PVector(0,0);
+    acceleration = new PVector(0,0);
+    rectWidth = mass * 16.0;
+    rectHalf = rectWidth / 2.0;
+
+  }
+
+  // Newton’s second law.
+  void applyForce(PVector force)
+  {
+    // Receive a force, divide by mass, and add to acceleration.
+    PVector f = PVector.div(force,mass);
+    acceleration.add(f);
+
+  }
+
+
+  void drag(Liquid l)
+  {
+    /*
+      F = |V|^2 * A * Cd * V * -1
+     */
+    
+    float speed = velocity.mag();    // The force’s magnitude: Cd * v~2~
+    float frontalArea = this.rectWidth * 0.05;
+    float dragMagnitude = l.dragCoefficient * speed * speed * frontalArea;
+    PVector drag = velocity.get();
+
+    drag.mult(-1);    // The force's direction: -1 * velocity
+    drag.normalize();
+    drag.mult(dragMagnitude);    // Finalize the force: magnitude and direction together.
+    // Apply the force.
+    applyForce(drag);
+  }
+  
+  void update()
+  {
+    // Motion 101 from Chapter 1
+    velocity.add(acceleration);
+    location.add(velocity);
+
+    // Now add clearing the acceleration each time!
+    acceleration.mult(0);
+
+  }
+
+  void display()
+  {
+    stroke(0);
+    fill(175);
+    drawBox(location.x, location.y, rectWidth, rectWidth);
+    checkEdges();
+  }
+
+  void drawBox(float _x, float _y, float _w, float _h)
+  {
+    rect((_x-rectHalf),(_y-rectHalf), _w, _h);
+  }
+
+  float getLocationX()
+  {
+    return location.x;
+  }
+
+  float getLocationY()
+  {
+    return location.y;
+  }
+
+  float getEdge(int EDGE_NUM)
+  {
+    if (EDGE_NUM == 0)
+      return location.y - rectHalf;
+    else if (EDGE_NUM == 1)
+      return location.x + rectHalf;
+    else if (EDGE_NUM == 2)
+      return location.y + rectHalf;
+    else
+      return location.x - rectHalf;
+  }
+
+  boolean isInside(Liquid l)
+  {
+    // true if the current mover is inside the liquid bounds
+    return ((location.x > l.x) && (location.x < l.x + l.w) && (location.y > l.y) && (location.y < l.y + l.h));
+  }
+  
+  // Somewhat arbitrarily, we are deciding that an object bounces when it hits the edges of a window.
+  void checkEdges()
+  {
+
+    if (getEdge(1) > width)
+    {
+      location.x = width - rectHalf;
+      velocity.x *= -1;
+    }
+    else if (getEdge(3) < 0)
+    {
+      location.x = 0 + rectHalf;
+      velocity.x *= -1;
+    }
+
+    if (getEdge(2) > height)
+    {
+      location.y = height - rectHalf;
+      velocity.y *= -1;
+    }
+    else if (getEdge(0) < 0)
+    {
+      velocity.y *= -1;
+      location.y = 0 + rectHalf;
+    }
+  }
+
+
+}

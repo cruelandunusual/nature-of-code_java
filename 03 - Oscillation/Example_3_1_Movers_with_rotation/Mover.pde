@@ -1,0 +1,168 @@
+
+
+class Mover
+{
+
+  PVector location;
+  PVector velocity;
+  PVector acceleration;
+  // The object now has mass!
+  float mass;
+  float x, y;
+  float G;
+
+  float angle;
+  float aVel;
+  float aAccel;
+  
+  Mover(float _m, float _x, float _y)
+  {
+    // And for now, we’ll just set the mass equal to 1 for simplicity.
+    mass = _m;
+    x = _x;
+    y = _y;
+    location = new PVector(x,y);
+    velocity = new PVector(0,0);
+    acceleration = new PVector(0,0);
+    angle = 0.0;
+    aVel = 0.0;
+    aAccel = 0.0;
+    
+    G = 0.7;
+  }
+
+  // Newton’s second law.
+  void applyForce(PVector force)
+  {
+    // Receive a force, divide by mass, and add to acceleration.
+    PVector f = PVector.div(force,mass);
+    acceleration.add(f);
+
+  }
+
+  void applyRotation(float rot)
+  {
+    float r = rot / mass; // divide angularRotation by mass. Dunno what this'll do.
+    aAccel = r; // not accumulative for now.
+  }
+
+  void update()
+  {
+    // Motion 101 from Chapter 1
+    velocity.add(acceleration);
+    location.add(velocity);
+
+    //aAccel = acceleration.x * 0.01;
+    aVel += aAccel;
+    aVel = constrain(aVel, -0.1, 0.1);
+    angle += aVel;
+
+    acceleration.mult(0);
+  }
+
+  void display()
+  {
+    stroke(0);
+    fill(0,100, 225);
+    // Scaling the size according to mass.
+    rectMode(CENTER);
+    pushMatrix();
+    //translate to the Mover's centre point
+    translate(location.x, location.y);
+    rotate(angle);
+    rect(0,0,mass*16,mass*16);
+    popMatrix();
+    // fill(0);
+    // textAlign(CENTER);
+    // text(velocity.mag(), location.x, location.y + textAscent()/2);
+  }
+
+  PVector attract(Attractor a)
+  {
+
+    PVector force = PVector.sub(location, a.location); //get the vector difference between two points
+    float distance = force.mag(); //get the scalar distance between the two points (the magnitude of the vector)
+
+    distance = constrain(distance,5.0,25.0); //constrain the distance, partly to avoid division by zero
+    //but also because extreme values look odd in a processing sketch
+    
+    force.normalize(); //normalize the vector difference between the two points;
+    //now it's just a direction unit vector
+
+    float strength = (G * mass * a.mass) / (distance * distance); //compute strength of the attraction as a scalar
+    force.mult(strength * 0.001); //multiply the unit vector by the calculated scalar to give the force as a vector
+    return force;
+  }
+
+
+  PVector attract(Mover m)
+  {
+
+    PVector force = PVector.sub(location, m.location); //get the vector difference between two points
+    float distance = force.mag(); //get the scalar distance between the two points (the magnitude of the vector)
+
+    distance = constrain(distance,5.0,25.0); //constrain the distance, partly to avoid division by zero
+    //but also because extreme values look odd in a processing sketch
+    
+    force.normalize(); //normalize the vector difference between the two points;
+    //now it's just a direction unit vector
+
+    float strength = (G * mass * m.mass) / (distance * distance); //compute strength of the attraction as a scalar
+    force.mult(strength * 0.1); //multiply the unit vector by the calculated scalar to give the force as a vector
+    return force;
+  }
+
+  
+  float angularRotation(Mover m) // I just made this up. I copied "PVector attract(Mover m)" and changed some things.
+  {
+
+    PVector force = PVector.sub(location, m.location); //get the vector difference between two points
+    float distance = force.mag(); //get the scalar distance between the two points (the magnitude of the vector)
+
+    distance = constrain(distance,5.0,25.0); //constrain the distance, partly to avoid division by zero
+    //but also because extreme values look odd in a processing sketch
+    
+    force.normalize(); //normalize the vector difference between the two points;
+    //now it's just a direction unit vector
+    float angle = atan2(force.y, force.x);//angle in radians; a float in the range from PI to -PI
+    if (angle < 0){
+      angle = -1;
+    }
+    else angle = 1;
+
+    float aRotation = (G * mass * m.mass) / (distance * distance); //compute strength of the rotation as a scalar
+    return aRotation * angle * 0.001; // divide the rotation by 1000 otherwise things spin way too fast
+  }
+
+  
+
+  // Somewhat arbitrarily, we are deciding that an object bounces when it hits the edges of a window.
+  void checkEdges()
+  {
+    if (location.x > width)
+    {
+      location.x = width;
+      velocity.x *= -1;
+    }
+    else if (location.x < 0)
+    {
+      velocity.x *= -1;
+      location.x = 0;
+    }
+
+    if (location.y > height)
+    {
+      // Even though we said we shouldn't touch location and velocity directly,
+      // there are some exceptions.
+      // Here we are doing so as a quick and easy way to reverse the direction
+      // of our object when it reaches the edge.
+      velocity.y *= -1;
+      location.y = height;
+    }
+    else if (location.y < 0)
+    {
+      velocity.y *= -1;
+      location.y = 0;
+    }
+  }
+}

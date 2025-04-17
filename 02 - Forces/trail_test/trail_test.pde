@@ -1,0 +1,105 @@
+
+
+/*
+ * F = (G*m1*m2)/r*r * r[hat]
+ *
+ * PVector force = PVector.sub(obj1, obj2); //get the vector difference between two points
+ * float distance = force.mag(); //get the scalar distance between the two points (the magnitude of the vector)
+ * force.normalize(); //normalize the vector difference between the two points; now it's just a direction unit vector
+ * float strength = (G * mass1 * mass2) / (distance * distance); //compute the strength of the attraction as a scalar
+ * force.mult(strength); //multiply the unit vector by the calculated scalar to give the force as a vector
+ *
+ */
+
+Mover[] movers = new Mover[70];
+Attractor a;
+PFont font;
+int last;
+float xpos, ypos;
+int frameCounter;
+
+void setup()
+{
+
+  //size(1280, 720);
+  size(1280, 720, P3D);
+  background(255);
+  font = loadFont("Lato-Regular-12.vlw");
+  textFont(font, 12);
+  init();
+  frameCounter = 1;
+}
+
+void init()
+{
+  xpos = ypos = 0;
+  last = movers.length-1;
+  for (int i = 0; i < movers.length; i++)
+  {
+    movers[i] = new Mover(3, xpos, ypos);
+  }
+  a = new Attractor();
+
+}
+
+void draw()
+{
+  if (frameCounter++ % 300 == 0)
+  {  
+    background(255);
+  }
+  drawLoop();
+
+}
+
+void drawLoop()
+{
+  a.display();
+  
+  for (int i = 0; i < last; i++)
+  {
+    movers[i] = movers[i+1];
+    //movers[i].display();
+  }
+
+  //PVector attractorForce = a.attract(movers[last]);
+  //movers[last].update();
+  movers[last] = new Mover(3, xpos += 1, ypos += 1);
+  //movers[movers.length-1].display();
+  
+  for (int i = 0; i < movers.length; i++)
+  {
+    movers[i].display();
+  }
+}
+
+
+// void drawLoop()
+// {
+//   a.display();
+//   for (int j= 0; j < movers.length; j++)
+//   {
+//     for (int i = 0; i < movers.length; i++)
+//     {
+//       if (movers[i] != movers[j])
+//       {
+//         PVector attractorForce = movers[j].attract(movers[i]);
+//         movers[i].applyForce(attractorForce);
+//         movers[i].update();
+
+//         attractorForce = movers[i].attract(a);
+//         a.applyForce(attractorForce);
+//         a.update();
+  
+//         movers[i].display();
+//       }
+//     }
+//   }
+// }
+
+
+void mouseClicked()
+{
+  init();
+  drawLoop();
+}

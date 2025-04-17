@@ -1,0 +1,76 @@
+
+
+class Attractor
+{
+
+  float mass;
+  PVector location;
+  float G;
+
+  // my own additions
+  PVector velocity;
+  PVector acceleration;
+  float x, y;
+
+
+  
+  Attractor()
+  {
+    mass = 60;
+    location = new PVector(width/2, height/2);
+    G = 0.7;
+    velocity = new PVector(0,0);
+    acceleration = new PVector(0,0);
+    
+  }
+
+  PVector attract(Mover m)
+  {
+
+    PVector force = PVector.sub(location, m.location); //get the vector difference between two points
+    float distance = force.mag(); //get the scalar distance between the two points (the magnitude of the vector)
+
+    distance = constrain(distance,5.0,25.0); //constrain the distance, partly to avoid division by zero
+    //but also because extreme values look odd in a processing sketch
+    
+    force.normalize(); //normalize the vector difference between the two points;
+    //now it's just a direction unit vector
+
+    float strength = (G * mass * m.mass) / 1 / (distance * distance); //compute strength of the attraction as a scalar
+    float inverse = 1 - strength;
+    force.mult(inverse); //multiply the unit vector by the calculated scalar to give the force as a vector
+    return force;
+  }
+
+
+
+  // Newton’s second law.
+  void applyForce(PVector force)
+  {
+    // Receive a force, divide by mass, and add to acceleration.
+    PVector f = PVector.div(force,mass);
+    acceleration.add(f);
+
+  }
+
+  void update()
+  {
+    // Motion 101 from Chapter 1
+    velocity.add(acceleration);
+    location.add(velocity);
+    acceleration.mult(0);
+  }
+
+  
+  void display()
+  {
+    noStroke();
+
+    fill(204, 102, 0);
+    ellipse(location.x, location.y, mass*2, mass*2);
+    // fill(0);
+    // textAlign(CENTER);
+    // text(velocity.mag(), location.x, location.y + textAscent()/2);
+
+  }
+}

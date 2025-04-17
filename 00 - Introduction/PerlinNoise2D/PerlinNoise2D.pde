@@ -1,0 +1,41 @@
+
+
+float xoff, yoff;
+float zoff;
+float xcounter = 0.0;
+float ycounter = 0.0;
+float tx = 0.0;
+float ty = 1000.0;
+
+void setup()
+{
+  
+  size(640, 360);
+  background(255);
+
+}
+
+void draw()
+{
+  
+  loadPixels();
+  xoff = 0.0 + xcounter;
+  for (int x = 0; x < width; x++) {
+    yoff = 1000.0 + ycounter;
+    for (int y = 0; y < height; y++) {
+      // float bright = random(255);
+      float bright = map(noise(xoff,yoff,zoff), 0, 1, 0, 255);
+      pixels[x+y*width] = color(bright);
+      yoff += 0.01;
+    }
+    xoff += 0.01;
+  }
+  zoff += 0.1;
+  updatePixels();
+  xcounter = map(noise(tx), 0, 1, 0, width);
+  ycounter = map(noise(ty), 0, 1, 0, height);
+  tx += 0.0001;
+  ty += 0.0001;
+  //counter += 0.1 * (int(random(3)) - 1);
+
+}

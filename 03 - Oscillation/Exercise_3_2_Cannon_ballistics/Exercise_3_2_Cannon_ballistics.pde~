@@ -1,0 +1,47 @@
+
+
+Cannon cannon;
+Projectile proj;
+PVector gravity;
+
+
+void setup()
+{
+  size(1280,720);
+  background(255);
+  cannon = new Cannon(30,700, 100);
+  proj = new Projectile(cannon.getPosition().x, cannon.getPosition().y, 20, 20);
+  gravity = new PVector(0,0.06);
+
+}
+
+
+void draw()
+{
+
+  background(255);
+  cannon.display();
+
+  if (proj.isShooting() && proj.isInsideWorld())
+  {
+    proj.applyForce(gravity);
+  }
+  if (proj.isShooting() && ! proj.isInsideWorld())
+  {
+    proj.reset(cannon.getPosition().x, cannon.getPosition().y, 20, 20);
+  }
+  proj.update();
+  proj.display();
+  
+}
+
+
+void mouseClicked()
+{
+
+  if (! proj.isShooting())
+  {
+    proj.fire();    
+  }
+
+}

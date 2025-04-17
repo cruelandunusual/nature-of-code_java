@@ -1,0 +1,29 @@
+
+
+class Force
+{
+
+  /*
+    Forces are rectangular areas, and know about their own
+    x and y coords, and width and height. */
+  float x,y,w,h;
+  float c;
+  float fillColor;
+
+  Force(float x_, float y_, float w_, float h_, float c_, float fc_)
+  {
+    x = x_;
+    y = y_;
+    w = w_;
+    h = h_;
+    c = c_;
+    fillColor = fc_;
+  }
+
+  void display() {
+    noStroke();
+    fill(fillColor);
+    rect(x,y,w,h);
+  }
+
+}

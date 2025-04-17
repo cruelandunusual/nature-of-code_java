@@ -1,0 +1,94 @@
+
+
+/*
+friction = -1 * friction coefficient * Normal force * velocity unit vector
+ */
+
+Mover[] movers = new Mover[20];
+Pocket[] pockets = new Pocket[4];
+PVector wind;
+PVector gravity;
+PVector friction;
+float fc; //friction coefficient
+float nf; //Normal force
+float frictionMagnitude;
+
+
+void setup()
+{
+  size(360,960,P3D);
+  for (int i = 0; i < movers.length; i++)
+  {
+    movers[i] = new Mover(random(0.7,5), 80, 80);
+  }
+
+  // pockets[0] = new Pocket(0, 0, width / 2, height / 2, 0.125);
+  // pockets[1] = new Pocket(width / 2, 0, width / 2, height / 2, 0.25);
+  // pockets[2] = new Pocket(0, height / 2,  width / 2, height / 2, 0.5);
+  // pockets[3] = new Pocket(width / 2, height / 2, width / 2, height / 2, 0.75);
+
+  // pockets[0] = new Pocket(0, 0, width / 4, height, 0.125);
+  // pockets[1] = new Pocket(0 + width / 4, 0, width / 4, height, 0.9);
+  // pockets[2] = new Pocket(0 + (width / 4) + (width / 4), 0, width / 4, height, 2);
+  // pockets[3] = new Pocket(0 + (width / 4) + (width / 4) + (width / 4), 0, width / 4, height, 0.5);
+
+  pockets[0] = new Pocket(0, 0, width, height / 4, 0.125);
+  pockets[1] = new Pocket(0, 0 + (height / 4), width, height / 4, 15);
+  pockets[2] = new Pocket(0, 0 + (height / 4) + (height / 4), width, height / 4, 0.5);
+  pockets[3] = new Pocket(0, 0 + (height / 4) + (height / 4) + (height / 4), width, height / 4, 21);
+
+  
+  wind = new PVector(0.04, 0);
+  fc = 0.05;
+  nf = 1;
+  frictionMagnitude = fc*nf;
+  
+}
+
+
+void setFrictionMagnitude(Mover mover)
+{
+  int moverFillColor = 255;
+  int colorStep = 0;
+  for (int i = 0; i < pockets.length; i++)
+  {
+    if (pockets[i].inPocket(mover.getLocationX(), mover.getLocationY()))
+    {
+      frictionMagnitude = fc * nf * pockets[i].getPocketFriction();
+      mover.setMoverFillColor(moverFillColor - colorStep);
+    }
+    colorStep += 50;
+  }
+
+}
+
+
+void draw()
+{
+
+  background(255);
+  pockets[0].display();
+  pockets[1].display();
+  pockets[2].display();
+  pockets[3].display();
+  for (int i = 0; i < movers.length; i++)
+  {
+    setFrictionMagnitude(movers[i]);
+    friction = movers[i].velocity.get();
+    friction.mult(-1);
+    friction.normalize();
+    friction.mult(frictionMagnitude);
+    
+    float m = movers[i].mass;
+    // Scaling gravity by mass to be more accurate
+    gravity = new PVector(0,0.2*m);
+    
+    movers[i].applyForce(gravity);
+    movers[i].applyForce(wind);
+    movers[i].applyForce(friction);
+    
+    movers[i].update();
+    movers[i].display();
+  }
+  
+}  

@@ -1,0 +1,29 @@
+class Walker
+{
+  int stepX;
+  int stepY;
+  color walkerColor;
+  
+  Walker(color c)
+  {
+    //initialise walker location to middle of screen
+    stepX = width / 2 + int(random(40)) - 20; // values range from -20 - 20
+    stepY = height / 2 + int(random(40)) - 20;
+    this.walkerColor = c; //set color
+  }
+  
+  void draw()
+  {
+    stroke(walkerColor);
+    //point(stepX, stepY);
+    ellipse(stepX, stepY, 16, 16);
+  }
+  
+  void step()
+  {
+    int x = int(random(3))-1;
+    int y = int(random(3))-1;
+    stepX += x;
+    stepY += y;
+  }
+}

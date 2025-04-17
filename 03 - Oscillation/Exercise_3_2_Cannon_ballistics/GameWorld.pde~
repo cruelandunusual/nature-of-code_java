@@ -1,0 +1,33 @@
+
+
+class GameWorld
+{
+
+  Cannon cannon;
+  Projectile proj;
+  ////////////////
+  Debug debug;
+  ////////////////
+
+  GameWorld()
+  {
+
+    cannon = new Cannon(30,700, 100);
+    proj = new Projectile(width/2, height/2, 100);
+    debug = new Debug();
+  }
+
+  void draw()
+  {
+    cannon.display();
+    proj.display(cannon.getPosition().x, cannon.getPosition().y);
+  }
+
+  
+  void debug()
+  {
+    debug.out("the mouse was clicked here: ", mouseX, mouseY);
+
+  }
+  
+}

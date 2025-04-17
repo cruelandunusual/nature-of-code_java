@@ -1,0 +1,65 @@
+Example_2_6_Gravitational_attraction/
+
+/*
+ * F = (G*m1*m2)/r*r * r[hat]
+ *
+ * PVector force = PVector.sub(obj1, obj2); //get the vector difference between two points
+ * float distance = force.mag(); //get the scalar distance between the two points (the magnitude of the vector)
+ * force.normalize(); //normalize the vector difference between the two points; now it's just a direction unit vector
+ * float strength = (G * mass1 * mass2) / (distance * distance); //compute the strength of the attraction as a scalar
+ * force.mult(strength); //multiply the unit vector by the calculated scalar to give the force as a vector
+ *
+ */
+
+Mover m;
+Attractor a;
+PFont font;
+
+void setup()
+{
+
+  size(640, 360);
+
+  font = loadFont("Lato-Regular-12.vlw");
+  textFont(font, 12);
+  init();
+
+}
+
+void init()
+{
+
+  m = new Mover(2, random(0, width), random(0, height));
+  a = new Attractor();
+
+}
+
+void draw()
+{
+
+  background(255);
+  begin();
+
+}
+
+void begin()
+{
+
+  PVector f = a.attract(m);
+  m.applyForce(f);
+  m.update();
+
+  f = m.attract(a);
+  a.applyForce(f);
+  a.update();
+  
+  a.display();
+  m.display();
+ 
+}
+
+void mouseClicked()
+{
+  init();
+  begin();
+}

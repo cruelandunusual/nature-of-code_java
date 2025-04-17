@@ -1,0 +1,118 @@
+
+
+class Projectile
+{
+
+
+  PVector position;
+  PVector velocity;
+  PVector acceleration;  
+  float x, y;
+  float projLength;
+  float projHeight;
+  float mass;
+  boolean shooting;  
+  float angle;
+
+  
+  Projectile(float _x, float _y, float _l, float _h, float _m)
+  {
+    reset(_x, _y, _l, _h, _m);
+  }
+
+
+  void display()
+  {
+
+    stroke(0);
+    rectMode(CENTER);
+    pushMatrix();
+    translate(position.x,position.y);
+    if (!shooting)
+    {
+      angle = atan2(mouseY - getPosition().y, mouseX - getPosition().x);
+    }
+    else
+    {
+      angle = atan2(velocity.y, velocity.x);
+    }
+    rotate(angle);
+    rect(0+projLength/2, 0, projLength, projHeight);
+    popMatrix();
+    noStroke();
+    
+  }
+
+  
+  void reset(float _x, float _y, float _l, float _h, float _m)
+  {
+    position = new PVector(_x, _y);
+    velocity = new PVector(0, 0);
+    acceleration = new PVector(0, 0);
+    projLength = _l;
+    projHeight = _h;
+    mass = _m;
+    shooting = false;
+    angle = 0;
+  }
+  
+  
+  PVector getPosition()
+  {
+    return position;
+  }
+
+  
+  PVector getDimensions()
+  {
+    return new PVector(projLength, projHeight);
+  }
+  
+
+  void fire()
+  {
+    PVector target = new PVector(mouseX, mouseY);
+    acceleration = target.sub(position);
+    acceleration.limit(4.8); //thoroughly tested magic number...
+    applyForce(acceleration);
+    shooting = true;
+  }
+
+  
+  boolean isShooting()
+  {
+    return shooting;
+  }
+
+  
+  // void applyForce(PVector force)
+  // {
+  //   acceleration.add(force);
+  // }
+
+  void applyForce(PVector force)
+  {
+    // Making a copy of the PVector before using it!
+    PVector f = force.get();
+    f.div(mass);
+    acceleration.add(f);
+  }
+
+  
+  void update()
+  {
+    velocity.add(acceleration);
+    position.add(velocity);
+    acceleration.mult(0);
+  }
+  
+
+  boolean isInsideWorld()
+  {
+    boolean where = 
+    ((position.x > 0 && position.x < width)
+     && (position.y < height));
+    return where;
+  }
+  
+}

@@ -1,0 +1,88 @@
+
+
+class Mover
+{
+
+  PVector location;
+  PVector velocity;
+  PVector acceleration;
+  // The object now has mass!
+  float mass;
+  float massMultiplier;
+  float diameter, radius;
+  float x, y;
+  float G;
+  
+  Mover(float _m, float _x, float _y)
+  {
+    mass = _m;
+    x = _x;
+    y = _y;
+    location = new PVector(x,y);
+    velocity = new PVector(0,0);
+    acceleration = new PVector(0,0);
+    massMultiplier = 16;
+    diameter = mass * massMultiplier;
+    radius = diameter / 2;
+  }
+
+
+  void update()
+  {
+    // Motion 101 from Chapter 1
+    acceleration = new PVector(0.01, 0.01);
+    velocity.add(acceleration);
+    location.add(velocity);
+    acceleration.mult(0);
+  }
+
+  void display()
+  {
+    stroke(0);
+    fill(0,100, 225);
+    // Scaling the size according to mass.
+    ellipse(location.x,location.y,diameter, diameter);
+    fill(0);
+    textAlign(CENTER);
+    text(velocity.mag(), location.x, location.y + textAscent()/2);
+    checkEdges();
+  }
+
+
+  float getLocationX()
+  {
+    return location.x;
+  }
+
+  float getLocationY()
+  {
+    return location.y;
+  }
+
+
+  // Somewhat arbitrarily, we are deciding that an object bounces when it hits the edges of a window.
+  void checkEdges()
+  {
+    if (location.x > width - radius)
+    {
+      location.x = width - radius;
+      velocity.x *= -1;
+    }
+    else if (location.x < 0 + radius)
+    {
+      location.x = 0 + radius;
+      velocity.x *= -1;
+    }
+
+    if (location.y > height - radius)
+    {
+      location.y = height - radius;
+      velocity.y *= -1;
+    }
+    else if (location.y < 0 + radius)
+    {
+      location.y = 0 + radius;
+      velocity.y *= -1;
+    }
+  }
+}

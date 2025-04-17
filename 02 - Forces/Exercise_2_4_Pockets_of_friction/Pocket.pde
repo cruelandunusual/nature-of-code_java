@@ -1,0 +1,45 @@
+
+
+class Pocket
+{
+
+  
+  float x;
+  float y;
+  float w;
+  float h;
+  float fm;
+
+  
+  Pocket(float _x, float _y, float _w, float _h, float _fm)
+  {
+
+    x = _x;
+    y = _y;
+    w = _w;
+    h = _h;
+    fm = _fm;
+    
+  }
+
+  
+  boolean inPocket(float _x, float _y)
+  {
+    return (_x > x && _x < (x+w) && _y > y && _y < (y+h));
+  }
+
+  
+  float getPocketFriction()
+  {
+    return fm;
+  }
+
+   
+  void display()
+  {
+    //noStroke();
+    fill(fm * 100 + 25);
+    rect(x,y,w,h);
+  }
+  
+}

@@ -1,0 +1,30 @@
+void setup()
+{
+  size(640, 360);
+  background(255);
+  float y = height/2;
+}
+
+void draw()
+{
+  float num = randomGaussian();
+  float sd = 60; //standard deviation
+  float mean = width/2; // half of window width
+
+  float x = sd * num + mean;
+
+  //float gauScale = randomGaussian();
+  float scaleReciprocal = 5;
+  
+  
+  float ellipseScale = (scaleReciprocal - abs(num)) * 32;
+  //System.out.println(ellipseScale);
+
+
+  
+  noStroke();
+  fill(0, 10);
+  //  ellipse(x, 180, 32, 32);
+  ellipse(x, 180, ellipseScale, ellipseScale);
+  
+}

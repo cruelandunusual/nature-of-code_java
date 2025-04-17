@@ -1,0 +1,42 @@
+int[] randomCounts;
+ 
+void setup() {
+  size(640,240);
+  randomCounts = new int[20];
+}
+ 
+void draw() {
+  background(255);
+ 
+
+//Pick a random number and increase the count.
+
+  int index = int(random(randomCounts.length));
+  randomCounts[index]++;
+ 
+  stroke(0);
+  fill(175);
+  int w = width/randomCounts.length;
+
+//Graphing the results
+
+  for (int x = 0; x < randomCounts.length; x++) {
+    rect(x*w,height-randomCounts[x],w-1,randomCounts[x]);
+  }
+
+}
+
+
+
+int[] stuff = new int[5]
+
+stuff[0] = 1; // 1 is stored in the array twice, making it more likely to be picked.
+stuff[1] = 1;
+stuff[2] = 2;
+stuff[3] = 3;
+stuff[4] = 3;
+
+int index = int(random(stuff.length)); // Picking a random element from an array
+System.out.println();
+// Running this code will produce a 40% chance of printing the value 1,
+// a 20% chance of printing 2, and a 40% chance of printing 3.

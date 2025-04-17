@@ -1,0 +1,42 @@
+
+
+class Baton
+{
+
+  float diameter;
+  float radius;
+  float handleLength;
+  float x, y;
+
+  Baton(float _diameter, float _handleLength)
+  {
+
+    diameter = _diameter;
+    radius = diameter / 2;
+    handleLength = _handleLength;
+
+  }
+
+  void display()
+  {
+    noStroke();    
+    pushMatrix();
+    translate(-20, 0);
+    fill(100, 20, 0, 100);
+    ellipse(0, 20, diameter, diameter);
+
+    stroke(0);
+    line(radius, 20, handleLength, 20);    
+    noStroke();
+
+    fill(0, 20, 100, 100);
+    ellipse(handleLength+radius, 20, diameter, diameter);
+    popMatrix();
+  }
+
+  float getBatonLength()
+  {
+    return (diameter*2)+handleLength;
+  }
+
+}

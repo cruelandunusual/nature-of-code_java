@@ -1,0 +1,42 @@
+
+
+float angle;
+Baton baton;
+float length;
+float translateX;
+float translateY;
+
+void setup()
+{
+
+  size(1280, 720, P3D);
+  background(255);
+  noStroke();
+  smooth();
+  angle = radians(60);
+  baton = new Baton(16, 40); //(float _diameter, float _handleLength)
+  length = baton.getBatonLength();
+  translateX = width/2;
+  translateY = height/2;
+}
+
+void draw()
+{
+  
+  background(255);
+  stroke(0);
+  //drawCrossHairs();
+  pushMatrix();
+  translate(translateX, translateY);
+  rotate(angle += 0.01); //add a slow clockwise rotation
+  baton.display();
+  popMatrix();
+  
+}
+
+
+void drawCrossHairs()
+{
+  line(0, height/2, width, height/2);
+  line(width/2, 0, width/2, height);
+}

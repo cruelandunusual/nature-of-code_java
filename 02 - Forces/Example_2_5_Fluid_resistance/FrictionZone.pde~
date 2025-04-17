@@ -1,0 +1,17 @@
+
+
+class FrictionZone extends Force
+{
+
+  FrictionZone()
+  {
+    super();
+  }
+
+  void display() {
+    noStroke();
+    fill(200);
+    rect(x,y,w,h);
+  }
+
+}
